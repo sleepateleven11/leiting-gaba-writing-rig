@@ -15,16 +15,11 @@ export async function fetchGNewsArticles() {
     throw new Error("GNEWS_API_KEY is not configured.");
   }
 
-  // Fetch sequentially to avoid overwhelming serverless function
-  const articles: GNewsArticle[] = [];
-  for (const query of GNEWS_QUERIES.slice(0, 4)) {
-    try {
-      const batch = await fetchQuery(query, token);
-      articles.push(...batch);
-    } catch {
-      // Individual query failed, continue with others
-    }
-  }
+  // Use 2 queries in parallel to stay under 10s serverless timeout
+  const batches = await Promise.allSettled(
+    GNEWS_QUERIES.slice(0, 2).map((query) => fetchQuery(query, token))
+  );
+  const articles = batches.flatMap((batch) => (batch.status === "fulfilled" ? batch.value : []));
 
   if (!articles.length) {
     throw new Error("GNews returned no articles.");
