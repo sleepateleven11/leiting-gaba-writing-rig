@@ -1362,7 +1362,7 @@ export default function Home() {
     : undefined;
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+    <div className={`${pageMode === "workspace" ? "h-screen overflow-hidden" : "min-h-screen"} bg-gray-50 flex flex-col`}>
       <AppHeader
         page={pageMode}
         selectedCount={selectedNews.length}
