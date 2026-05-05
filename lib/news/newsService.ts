@@ -67,9 +67,20 @@ export async function getNewsList(options: { forceRefresh?: boolean } = {}) {
 }
 
 export async function analyzeNews(news: News[]) {
-  if (!news.length || !hasDeepSeekConfig()) {
+  if (!news.length) {
     return news;
   }
+
+  // Skip AI analysis on serverless to avoid timeout
+  if (!hasDeepSeekConfig()) {
+    return news;
+  }
+
+  // Use basic keyword extraction without AI
+  return news.map((item) => ({
+    ...item,
+    keywords: extractKeywords(`${item.title} ${item.summary}`).slice(0, 5),
+  }));
 
   try {
     const analyzedItems = [];
