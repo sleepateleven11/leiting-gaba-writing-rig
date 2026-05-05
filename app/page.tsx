@@ -7,7 +7,7 @@ import { NewsDetailDrawer } from "@/components/NewsDetailDrawer";
 import { NewsHomePage } from "@/components/NewsHomePage";
 import { WorkspacePage } from "@/components/WorkspacePage";
 import { DraftWorkspacePage } from "@/components/draft/DraftWorkspacePage";
-import { mockNews } from "@/data/mockNews";
+
 import { createInitialDraftState, createSyntheticSection, getOutlineId, mergeDraftBlocks, mergeGeneratedBlocks } from "@/lib/draft/articleBlocks";
 import { getStyleTemplate } from "@/lib/draft/styleTemplates";
 import { articleToHtml, editorContentToHtml } from "@/lib/export/articleToHtml";
