@@ -75,6 +75,19 @@ export function ArticleEditor({
     setShowEmpty(!editorContent.trim() && !isGeneratingDraft);
   }, [editorContent, isGeneratingDraft]);
 
+  const isStreaming = isGeneratingDraft || generatingSectionIds.length > 0;
+
+  // Pause DOM sync during streaming generation to avoid freezing
+  useEffect(() => {
+    streamingPaused.current = isStreaming;
+    // When generation ends, force a one-time sync
+    if (!isStreaming && editorRef.current) {
+      const el = editorRef.current;
+      const stateText = (editorContent || "").replace(/\n{3,}/g, "\n\n").trim();
+      if (stateText) el.textContent = stateText;
+    }
+  }, [isStreaming, editorContent]);
+
   useEffect(() => {
     if (streamingPaused.current) return;
     const el = editorRef.current;
