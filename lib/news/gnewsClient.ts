@@ -36,25 +36,18 @@ async function fetchQuery(query: string, token: string): Promise<GNewsArticle[]>
   url.searchParams.set("sortby", "publishedAt");
   url.searchParams.set("apikey", token);
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 4000);
-
-  try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        Accept: "application/json"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`GNews request failed with status ${response.status}.`);
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(4000),
+    headers: {
+      Accept: "application/json"
     }
+  });
 
-    const raw = await response.json();
-    const parsed = gnewsResponseSchema.parse(raw);
-    return parsed.articles;
-  } finally {
-    clearTimeout(timeout);
+  if (!response.ok) {
+    throw new Error(`GNews request failed with status ${response.status}.`);
   }
+
+  const raw = await response.json();
+  const parsed = gnewsResponseSchema.parse(raw);
+  return parsed.articles;
 }
