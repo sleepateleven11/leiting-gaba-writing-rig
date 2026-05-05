@@ -7,3 +7,4 @@ dist
 *.err
 *.tsbuildinfo
 .env*
+.netlify
