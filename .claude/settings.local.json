@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/Desktop/**)",
+      "Read(//mnt/c/Users/Cold_Dew/Desktop/**)",
+      "Bash(unzip -o \"雷霆嘎巴写稿器 UI 清单.zip\" -d \"雷霆嘎巴写稿器 UI 清单_extracted\")",
+      "Bash(rm -f tsconfig.tsbuildinfo)",
+      "Bash(rm -rf .next)",
+      "Bash(grep \" declare const Expand \" node_modules/lucide-react/dist/lucide-react.d.ts)",
+      "Bash(grep \"declare const Expand\" node_modules/lucide-react/dist/lucide-react.d.ts)",
+      "Bash(cd \"d:/Leiting Gaba Writing Rig\" && rm -rf node_modules && npm install 2>&1 | tail -10)",
+      "Bash(echo 'import { Expand, Clock, Tag } from \"lucide-react\";')",
+      "Bash(rm -f ./_test_import.tsx)",
+      "Bash(echo 'import { Expand, Minimize, MessageSquareText, Lightbulb, ArrowLeftRight } from \"lucide-react\"; export const a = Expand; export const b = Minimize; export const c = MessageSquareText; export const d = Lightbulb; export const e = ArrowLeftRight;')",
+      "Bash(rm -f _t.tsx)",
+      "Bash(cp node_modules/lucide-react/dist/lucide-react.d.ts node_modules/lucide-react/dist/esm/lucide-react.d.ts)",
+      "Bash(rm -rf .next tsconfig.tsbuildinfo)",
+      "Bash(netstat -ano)",
+      "Bash(awk '{print $5}')",
+      "Bash(taskkill //F //PID 57132)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(taskkill //F //PID 41852)"
+    ]
+  }
+}

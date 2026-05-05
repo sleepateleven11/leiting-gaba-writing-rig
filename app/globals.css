@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  color: #111827;
+  background: #f9fafb;
+  font-family:
+    Inter, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #ede9fe;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.field-highlight {
+  animation: softPulse 1.1s ease-out;
+}
+
+@keyframes softPulse {
+  0% {
+    background-color: #ede9fe;
+    box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.18);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 1px transparent;
+  }
+}
