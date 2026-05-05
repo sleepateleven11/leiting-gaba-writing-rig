@@ -27,10 +27,8 @@ export async function getNewsList(options: { forceRefresh?: boolean } = {}) {
     return newsListResponseSchema.parse(memoryCache);
   }
 
-  if (provider === "mock" || !hasGNewsConfig()) {
-    const response = getMockNewsResponse(provider === "mock" ? "NEWS_PROVIDER=mock" : "GNEWS_API_KEY missing");
-    memoryCache = response;
-    return response;
+  if (!hasGNewsConfig()) {
+    throw new Error("GNEWS_API_KEY is not configured.");
   }
 
   try {

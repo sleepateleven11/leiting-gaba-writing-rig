@@ -78,8 +78,8 @@ type GenerateDraftApiResponse = {
 
 export default function Home() {
   const initialBoard = useMemo(() => createInitialThoughtBoard([]), []);
-  const [newsList, setNewsList] = useState<News[]>(mockNews);
-  const [newsProvider, setNewsProvider] = useState<NewsProvider>("mock");
+  const [newsList, setNewsList] = useState<News[]>([]);
+  const [newsProvider, setNewsProvider] = useState<NewsProvider>("gnews");
   const [newsUpdatedAt, setNewsUpdatedAt] = useState<string>();
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsRefreshing, setNewsRefreshing] = useState(false);
@@ -168,7 +168,7 @@ export default function Home() {
         undefined,
         forceRefresh ? "POST" : "GET"
       );
-      setNewsList(data.news.length ? data.news : mockNews);
+      setNewsList(data.news);
       setNewsProvider(data.provider);
       setNewsUpdatedAt(data.updatedAt);
 
@@ -178,9 +178,8 @@ export default function Home() {
         addToast("新闻已刷新", "已拉取并分析最新 AI 科技新闻。", "success");
       }
     } catch {
-      setNewsList((current) => (current.length ? current : mockNews));
-      setNewsProvider((current) => (newsList.length ? current : "mock"));
-      addToast("新闻加载失败", "已保留当前新闻列表；如果没有缓存，会使用 mock 新闻。", "warning");
+      setNewsProvider("mock");
+      addToast("新闻加载失败", "请检查 GNEWS_API_KEY 是否正确配置。", "warning");
     } finally {
       setNewsLoading(false);
       setNewsRefreshing(false);
@@ -1023,8 +1022,10 @@ export default function Home() {
     const surroundingText = content.slice(contextStart, contextEnd);
 
     void (async () => {
+      const TIMEOUT_MS = 30000;
+
       try {
-        await streamFetch({
+        const streamPromise = streamFetch({
           url: "/api/ai/rewrite-selection-stream",
           body: {
             workspace: buildWorkspaceState(),
@@ -1047,12 +1048,21 @@ export default function Home() {
             addToast("改写失败", message, "warning");
           }
         });
+
+        const timeoutPromise = new Promise<void>((_, reject) =>
+          setTimeout(() => {
+            controller.abort();
+            reject(new Error("timeout"));
+          }, TIMEOUT_MS)
+        );
+
+        await Promise.race([streamPromise, timeoutPromise]);
       } catch (error: unknown) {
         const msg = error instanceof Error ? error.message : "";
-        if (msg.includes("abort") || msg.includes("AbortError")) {
+        if (msg.includes("abort") || msg.includes("AbortError") || msg === "timeout") {
           setRewriteResult("");
           setIsRewriting(false);
-          addToast("已取消改写");
+          addToast(msg === "timeout" ? "改写超时" : "已取消改写", msg === "timeout" ? "30秒未返回结果，请重试。" : undefined, "warning");
         } else {
           setIsRewriting(false);
           addToast("改写失败", "请稍后重试。", "warning");
