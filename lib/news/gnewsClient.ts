@@ -15,11 +15,17 @@ export async function fetchGNewsArticles() {
     throw new Error("GNEWS_API_KEY is not configured.");
   }
 
-  const batches = await Promise.allSettled(
-    GNEWS_QUERIES.map((query) => fetchQuery(query, token))
-  );
+  // Fetch sequentially to avoid overwhelming serverless function
+  const articles: GNewsArticle[] = [];
+  for (const query of GNEWS_QUERIES.slice(0, 4)) {
+    try {
+      const batch = await fetchQuery(query, token);
+      articles.push(...batch);
+    } catch {
+      // Individual query failed, continue with others
+    }
+  }
 
-  const articles = batches.flatMap((batch) => (batch.status === "fulfilled" ? batch.value : []));
   if (!articles.length) {
     throw new Error("GNews returned no articles.");
   }
