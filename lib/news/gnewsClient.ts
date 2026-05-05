@@ -36,7 +36,7 @@ async function fetchQuery(query: string, token: string): Promise<GNewsArticle[]>
   url.searchParams.set("apikey", token);
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 9000);
+  const timeout = setTimeout(() => controller.abort(), 4000);
 
   try {
     const response = await fetch(url, {
